@@ -9,3 +9,5 @@ HU-1: Mostrar datos del autor
 
 ##Colección##
 ![coleccion](https://user-images.githubusercontent.com/124682758/234119003-f5d428e5-3cd7-4321-97b0-51362b2a043a.png)
+
+TRELLO: https://trello.com/b/4WwUIBMl/practica3
