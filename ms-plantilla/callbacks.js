@@ -14,12 +14,10 @@ const faunadb = require('faunadb'),
     q = faunadb.query;
 
 const client = new faunadb.Client({
-    secret: '¿¿¿ CLAVE SECRETA EN FAUNA PARA ESTA BBDD???',
+    secret: 'fnAFCT_1NjAAzK0Kql8mzDhNEGVl-yccl4539-Su',
 });
 
-const COLLECTION = "¿¿¿ COLECCION ???"
-
-// CALLBACKS DEL MODELO
+const COLLECTION = "Jugadores"
 
 /**
  * Función que permite servir llamadas sin importar el origen:
@@ -43,29 +41,79 @@ function CORS(res) {
  */
 const CB_MODEL_SELECTS = {
     /**
-     * Prueba de conexión a la BBDD: devuelve todas las personas que haya en la BBDD.
+     * Prueba de conexión a la BBDD: devuelve todas los proyectos que haya en la BBDD.
      * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
      * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
      */
     test_db: async (req, res) => {
         try {
-            let personas = await client.query(
+            let proyectos = await client_proyectos.query(
                 q.Map(
-                    q.Paginate(q.Documents(q.Collection(COLLECTION))),
+                    q.Paginate(q.Documents(q.Collection("Proyectos"))),
                     q.Lambda("X", q.Get(q.Var("X")))
                 )
             )
-            res.status(200).json(personas)
+            res.status(200).json(proyectos)
         } catch (error) {
             res.status(500).json({ error: error.description })
         }
     },
+    /**
+     * Método para obtener todos los proyectos de la BBDD.
+     * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
+     * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
+     */
+    getTodos: async (req, res) => {
+        try {
+            let proyectos = await client_proyectos.query(
+                q.Map(
+                    q.Paginate(q.Documents(q.Collection("Proyectos"))),
+                    q.Lambda("X", q.Get(q.Var("X")))
+                )
+            )
+            // console.log( proyectos ) // Para comprobar qué se ha devuelto en proyectos
+            CORS(res)
+                .status(200)
+                .json(proyectos)
+        } catch (error) {
+            res.status(500).json({ error: error.description })
+        }
+    },
+    /**
+     * Método para obtener todos los proyectos de la BBDD y, además, las personas que hay en cada proyecto
+     * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
+     * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
+     */
+    getTodosConPersonas: async (req, res) => {
+        try {
+            let proyectos = await client_proyectos.query(
+                q.Map(
+                    q.Paginate(q.Documents(q.Collection("Proyectos"))),
+                    q.Lambda("X", q.Get(q.Var("X")))
+                )
+            )
+            let url=URL_MS_PERSONAS+"/getTodas"
+            let response_personas = await fetch(url)
+            let personas = await response_personas.json()
 
+            // Incluyo los datos de cada persona que hay en el proyecto
+            proyectos.data.forEach( pr=>{
+                // Creo un nuevo campo llamado datos_personas en cada proyecto
+                pr.data.datos_personas=personas.data.filter( pe => 
+                    pr.data.personas.join().includes( pe.ref["@ref"].id)
+                )
+            });
+            
+            CORS(res)
+                .status(200)
+                .json(proyectos)
+        } catch (error) {
+            res.status(500).json({ error: error.description+"\n ¡¡COMPRUEBE QUE EL MS PERSONAS FUNCIONA CORRECTAMENTE" })
+        }
+    },
 }
 
 
-
-// CALLBACKS ADICIONALES
 
 /**
  * Callbacks adicionales. Fundamentalmente para comprobar que el ms funciona.
@@ -78,9 +126,26 @@ const CB_OTHERS = {
      */
     home: async (req, res) => {
         try {
-            CORS(res).status(200).json({ mensaje: "Microservicio MS Plantilla: home" });
+            res.status(200).json({mensaje: "Microservicio Proyectos: home"});
         } catch (error) {
-            CORS(res).status(500).json({ error: error.description })
+            res.status(500).json({ error: error.description })
+        }
+    },
+    /**
+     * Devuelve un mensaje indicando que se ha accedido a la información Acerca De del microservicio
+     * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
+     * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
+     */
+    acercaDe: async (req, res) => {
+        try {
+            res.status(200).json({
+                mensaje: "Microservicio Proyectos: acerca de",
+                autor: "Miguel Liébana",
+                email: "mlb00033@red.ujaen.es@red.ujaen.es",
+                fecha: "abril, 2023"
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.description })
         }
     },
 
@@ -89,22 +154,26 @@ const CB_OTHERS = {
      * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
      * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
      */
-    acercaDe: async (req, res) => {
+    ListarPersonas: async (req, res) => {
         try {
-            CORS(res).status(200).json({
-                mensaje: "Microservicio MS Plantilla: acerca de",
-                autor: "¿¿¿ AUTOR ???",
-                email: "¿¿¿ EMAIL ???",
-                fecha: "¿¿¿ FECHA ???"
+            res.status(200).json({
+                mensaje: "Microservicio Proyectos: acerca de",
+                autor: "Miguel Liébana",
+                email: "mlb00033@red.ujaen.es@red.ujaen.es",
+                fecha: "abril, 2023"
             });
         } catch (error) {
-            CORS(res).status(500).json({ error: error.description })
+            res.status(500).json({ error: error.description })
         }
     },
+    
 
 }
 
-// Une todos los callbacks en un solo objeto para poder exportarlos.
-// MUY IMPORTANTE: No debe haber callbacks con el mismo nombre en los distintos objetos, porque si no
-//                 el último que haya SOBREESCRIBE a todos los anteriores.
+// Une todos los callbacks en un solo objeto.
+// OJO: No debe haber callbacks con el mismo nombre en los distintos objetos, porque si no
+// el último que haya sobreescribe a todos los anteriores.
 exports.callbacks = { ...CB_MODEL_SELECTS, ...CB_OTHERS }
+
+
+//CB_MODEL_SELECTS.getTodosConPersonas() // Para depuración
