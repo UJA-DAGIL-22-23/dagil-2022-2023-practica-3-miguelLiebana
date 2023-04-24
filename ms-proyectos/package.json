@@ -1,0 +1,29 @@
+{
+  "name": "ms-proyectos",
+  "version": "1.0.0",
+  "description": "Microservicio encargado de la BBDD Proyectos en la aplicación PERSONAS-PROYECTOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vrivas/ms-proyectos.git"
+  },
+  "author": "Víctor Rivas <vrivas@ujaen.es>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vrivas/ms-proyectos/issues"
+  },
+  "homepage": "https://github.com/vrivas/ms-proyectos#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "faunadb": "^4.7.1",
+    "jsdocs": "^0.0.1-security.1",
+    "node-fetch": "^2.6.9"
+  },
+  "devDependencies": {
+    "jasmine": "^4.5.0",
+    "supertest": "^6.3.3"
+  }
+}
