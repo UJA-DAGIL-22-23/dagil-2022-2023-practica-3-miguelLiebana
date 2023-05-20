@@ -8,33 +8,15 @@
 
 const ROUTES = [
     {
-        url: '/personas',
+        url: '/plantilla',
         proxy: {
             target: "http://localhost:8002",
             changeOrigin: true,
             pathRewrite: {
-                [`^/personas`]: '',
+                [`^/plantilla`]: '',
             },
         }
-    },
-    {
-        url: '/proyectos',
-
-        proxy: {
-            target: "http://localhost:8003",
-            changeOrigin: true,
-            pathRewrite: {
-                [`^/proyectos`]: '',
-            },
-        }
-    },
-    /*{
-        url: '/favicon.ico',
-        proxy: {
-            target: "/static-files/img/favicon.ico",
-        },
-
-    },*/
+    }
 ]
 
 exports.routes = ROUTES;

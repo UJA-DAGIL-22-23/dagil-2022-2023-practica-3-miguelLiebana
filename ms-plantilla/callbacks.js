@@ -59,9 +59,50 @@ const CB_MODEL_SELECTS = {
         } catch (error) {
             res.status(500).json({ error: error.description })
         }
-    },
+    }, /**
+    * Método para obtener todas las personas de la BBDD.
+    * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL
+    * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
+    */
+   getTodas: async (req, res) => {
+       try {
+           let jugadores = await client.query(
+               q.Map(
+                   q.Paginate(q.Documents(q.Collection(COLLECTION))),
+                   q.Lambda("X", q.Get(q.Var("X")))
+               )
+           )
+
+           // console.log( personas ) // Para comprobar qué se ha devuelto en personas
+           CORS(res)
+               .status(200)
+               .json(jugadores)
+       } catch (error) {
+           CORS(res).status(500).json({error: error.description})
+       }
+   },
+       /**
+    * Método para obtener una persona de la BBDD a partir de su ID
+    * @param {*} req Objeto con los parámetros que se han pasado en la llamada a esta URL 
+    * @param {*} res Objeto Response con las respuesta que se va a dar a la petición recibida
+    */
+       getPorId: async (req, res) => {
+        try {
+            // console.log( "getPorId req", req.params.idPersona ) // req.params contiene todos los parámetros de la llamada
+            let jugador = await client.query(
+                q.Get(q.Ref(q.Collection('Jugadores'), req.params.idPersona))
+            )
+            // console.log( persona ) // Para comprobar qué se ha devuelto en persona
+            CORS(res)
+                .status(200)
+                .json(jugaodr)
+        } catch (error) {
+            CORS(res).status(500).json({ error: error.description })
+        }
+    }
 
 }
+
 
 
 
@@ -93,15 +134,14 @@ const CB_OTHERS = {
         try {
             CORS(res).status(200).json({
                 mensaje: "Microservicio MS Plantilla: acerca de",
-                autor: "¿¿¿ AUTOR ???",
-                email: "¿¿¿ EMAIL ???",
-                fecha: "¿¿¿ FECHA ???"
+                autor: "Miguel Liébana Beltrán",
+                email: "mlb00033@red.ujaen.es",
+                fecha: "22/04/2023"
             });
         } catch (error) {
             CORS(res).status(500).json({ error: error.description })
         }
-    },
-
+    },   
 }
 
 // Une todos los callbacks en un solo objeto para poder exportarlos.
