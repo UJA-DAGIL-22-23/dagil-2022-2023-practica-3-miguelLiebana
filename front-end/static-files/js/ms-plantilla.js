@@ -153,7 +153,6 @@ Jugadores.tablaJugadoresDatos = {}
 // Cabecera de la tabla
 Jugadores.tablaJugadoresNombres.cabecera = `<table width="100%" class="listado-personas">
                     <thead>
-                        <th width="10%">Id</th>
                         <th width="20%">Nombre</th>
                     </thead>
                     <tbody>
@@ -239,7 +238,6 @@ Jugadores.sustituyeTags = function (plantilla, jugador) {
 
 Jugadores.sustituyeTagsNombre = function (plantilla, jugador) {
     return plantilla
-        .replace(new RegExp(Jugadores.plantillaTags.ID, 'g'), jugador.ref['@ref'].id)
         .replace(new RegExp(Jugadores.plantillaTags.NOMBRE, 'g'), jugador.data.nombre)
 }
 
@@ -332,8 +330,7 @@ Jugadores.recuperaUnaPersona = async function (idPersona, callBackFn) {
 }
 // Elemento TR que muestra los nombres de una persona
 Jugadores.tablaJugadoresNombres.cuerpo = `
-    <tr title="${Jugadores.plantillaTags.ID}">
-        <td>${Jugadores.plantillaTags.ID}</td>
+    <tr title="${Jugadores.plantillaTags.NOMBRE}">
         <td>${Jugadores.plantillaTags.NOMBRE}</td>
     </tr>
     `;
@@ -686,3 +683,20 @@ Jugadores.guardar = async function () {
 Jugadores.almacenaVector = function (vector) {
     this.vectorDeportistas = vector
 }
+
+
+Jugadores.ponerBotones = function(){
+    let msj = Jugadores.botones;
+    Frontend.agregarHistorial("Pulsado botón Aplicación beisbol")
+    Frontend.Article.actualizar2("", msj)
+}
+Jugadores.botones=`<h1>Aplicación Microservicios beisbol</h1>
+<nav>
+<a href="javascript:Jugadores.listadoNombres()" class="opcion-principal mostrar"
+    title="Realiza un listado de todas los nombres de los jugadores que hay en la BBDD">Listar nombres Jugadores</a>
+<a href="javascript:Jugadores.ordenarListadoNombresAlfabeticamente()" class="opcion-principal mostrar"
+    title="Realiza un listado de todas las personas que hay en la BBDD ordenado alfabeticamente">Listar personas Alfabéticamente</a>
+<a href="javascript:Jugadores.listadoDatos()" class="opcion-principal mostrar"
+    title="Realiza un listado de todas las personas con todos sus datos">Listado Datos</a>
+</nav>
+<br/>`
