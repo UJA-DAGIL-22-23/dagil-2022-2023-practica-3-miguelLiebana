@@ -89,17 +89,17 @@ const CB_MODEL_SELECTS = {
        getPorId: async (req, res) => {
         try {
             // console.log( "getPorId req", req.params.idPersona ) // req.params contiene todos los parámetros de la llamada
-            let jugador = await client.query(
+            let persona = await client.query(
                 q.Get(q.Ref(q.Collection('Jugadores'), req.params.idPersona))
             )
             // console.log( persona ) // Para comprobar qué se ha devuelto en persona
             CORS(res)
                 .status(200)
-                .json(jugaodr)
+                .json(persona)
         } catch (error) {
             CORS(res).status(500).json({ error: error.description })
         }
-    }
+    },
 
 }
 
@@ -119,7 +119,7 @@ const CB_OTHERS = {
      */
     home: async (req, res) => {
         try {
-            CORS(res).status(200).json({ mensaje: "Microservicio MS Plantilla: home" });
+            CORS(res).status(200).json({ mensaje: "Microservicio MS Beisbol: home" });
         } catch (error) {
             CORS(res).status(500).json({ error: error.description })
         }

@@ -107,32 +107,30 @@ Jugadores.personaMostrada = null
 Jugadores.plantillaFormularioPersona = {}
 
 
-// Cabecera del formulario
+// Formulario para mostrar los datos de un/a jugador/a
 Jugadores.plantillaFormularioPersona.formulario = `
 <form method='post' action=''>
-    <table width="100%" class="listado-personas">
+    <table width="100%" class="listado-personas-SoloNombres">
         <thead>
-            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">FechaNacimiento</th>
-            <th width="15%">Año contratación</th><th width="25%">Acciones</th>
+            <th width="10%">Id</th>
+            <th width="20%">Nombre</th>
+            <th width="20%">Apellidos</th>
+            <th width="20%">Dia</th>
+            <th width="20%">Mes</th>
+            <th width="20%">Año</th>
+            <th width="20%">Participaciones Mundial</th>
+            <th width="20%">Partidos MVP</th>
         </thead>
         <tbody>
             <tr title="${Jugadores.plantillaTags.ID}">
-                <td><input type="text" class="form-persona-elemento" disabled id="form-persona-id"
-                        value="${Jugadores.plantillaTags.ID}" 
-                        name="id_persona"/></td>
-                <td><input type="text" class="form-persona-elemento editable" disabled
-                        id="form-persona-nombre" required value="${Jugadores.plantillaTags.NOMBRE}" 
-                        name="nombre_persona"/></td>
-                <td><input type="text" class="form-persona-elemento editable" disabled
-                        id="form-persona-apellidos" value="${Jugadores.plantillaTags.APELLIDOS}" 
-                        name="apellidos_persona"/></td>
-                <td><input type="text" class="form-persona-elemento editable" disabled
-                        id="form-persona-fechaNacimiento" required value="${Jugadores.plantillaTags.FECHANACIMIENTO}" 
-                        name="fecha_nacimiento"/></td>
-                <td><input type="number" class="form-persona-elemento editable" disabled
-                        id="form-persona-anio" min="1950" max="2030" size="8" required
-                        value="${Jugadores.plantillaTags["AÑO ENTRADA"]}" 
-                        name="año_entrada_persona"/></td>
+                <td><input type="text" class="form-persona-elemento" disabled id="idJugador" value="${Jugadores.plantillaTags.ID}" name="id"/></td>
+                <td>${Jugadores.plantillaTags.NOMBRE}</td>
+                <td>${Jugadores.plantillaTags.APELLIDOS}</td>
+                <td>${Jugadores.plantillaTags.DIA}</td>
+                <td>${Jugadores.plantillaTags.MES}</td>
+                <td>${Jugadores.plantillaTags.AÑO}</td>
+                <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
+                <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
             </tr>
         </tbody>
     </table>
@@ -187,6 +185,20 @@ Jugadores.tablaJugadoresDatos.cabecera = `<table width="100%" class="listado-per
     <tbody>
     `;
 
+    Jugadores.tablaUnSoloJugador.cuerpo = `
+    <tr title="${Jugadores.plantillaTags.ID}">
+        <td>${Jugadores.plantillaTags.ID}</td>
+        <td>${Jugadores.plantillaTags.NOMBRE}</td>
+        <td>${Jugadores.plantillaTags.APELLIDOS}</td>
+        <td>${Jugadores.plantillaTags.DIA}</td>
+        <td>${Jugadores.plantillaTags.MES}</td>
+        <td>${Jugadores.plantillaTags.AÑO}</td>
+        <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
+        <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
+    
+    </tr>
+    `;
+
 /**
  * Crea la cabecera para mostrar la info como tabla
  * @returns Cabecera de la tabla
@@ -200,19 +212,7 @@ Jugadores.cabeceraTable = function () {
     `;
 }
 
-Jugadores.tablaUnSoloJugador.cuerpo = `
-    <tr title="${Jugadores.plantillaTags.ID}">
-        <td>${Jugadores.plantillaTags.ID}</td>
-        <td>${Jugadores.plantillaTags.NOMBRE}</td>
-        <td>${Jugadores.plantillaTags.APELLIDOS}</td>
-        <td>${Jugadores.plantillaTags.DIA}</td>
-        <td>${Jugadores.plantillaTags.MES}</td>
-        <td>${Jugadores.plantillaTags.AÑO}</td>
-        <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
-        <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
-        
-    </tr>
-    `;
+
 
 /**
  * Pie de la tabla en la que se muestran las personas
@@ -231,9 +231,8 @@ Jugadores.tablaJugadoresNombres.pie = `        </tbody>
              `;
 
              // Pie de la tabla
-Jugadores.tablaUnSoloJugador.pie = `        </tbody>
-</table>
-`;
+Jugadores.tablaUnSoloJugador.pie = `        </tbody></table>`
+;
 
 
 /**
@@ -286,14 +285,16 @@ Jugadores.tablaJugadoresNombres.actualiza = function (persona) {
 Jugadores.tablaJugadoresDatos.actualiza = function (jugador) {
    return Jugadores.sustituyeTagsDatos(this.cuerpo, jugador)
 }
-
+Jugadores.tablaUnSoloJugador.actualiza = function (jugador) {
+    return Jugadores.sustituyeTagsDatos(this.cuerpo, jugador)
+}
 /**
  * Actualiza el formulario con los datos de la persona que se le pasa
- * @param {Persona} Persona Objeto con los datos de la persona que queremos escribir en el TR
+ * @param {Jugador} jugador Objeto con los datos de la persona que queremos escribir en el TR
  * @returns La plantilla del cuerpo de la tabla con los datos actualizados 
  */
-Jugadores.plantillaFormularioPersona.actualiza = function (persona) {
-    return Jugadores.sustituyeTags(this.formulario, persona)
+Jugadores.plantillaFormularioPersona.actualiza = function (jugador) {
+    return Jugadores.sustituyeTagsDatos(this.formulario, jugador)
 }
 
 /**
@@ -361,6 +362,9 @@ Jugadores.tablaJugadoresDatos.cuerpo = `
     <td>${Jugadores.plantillaTags.AÑO}</td>
     <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
     <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
+    <td>
+            <div><a href="javascript:Jugadores.mostrar('${Jugadores.plantillaTags.ID}')" class="opcion-secundaria mostrar">Mostrar Datos</a></div>
+    </td>
 </tr>
 `;
 
@@ -372,19 +376,19 @@ Jugadores.tablaJugadoresDatos.cuerpo = `
  * @returns Una cadena con la tabla que tiene ya los datos actualizados
  */
 Jugadores.personaComoTabla = function (persona) {
-    return Jugadores.plantillaTablaPersonas.cabecera
-        + Jugadores.plantillaTablaPersonas.actualiza(persona)
-        + Jugadores.plantillaTablaPersonas.pie;
+    return Jugadores.tablaUnSoloJugador.cabecera
+        + Jugadores.tablaUnSoloJugador.actualiza(persona)
+        + Jugadores.tablaUnSoloJugador.pie;
 }
 
 
 /**
  * Imprime los datos de una persona como una tabla dentro de un formulario usando la plantilla del formulario.
- * @param {persona} Persona Objeto con los datos de la persona
+ * @param {jugador} Jugador Objeto con los datos del jugador
  * @returns Una cadena con la tabla que tiene ya los datos actualizados
  */
-Jugadores.personaComoFormulario = function (persona) {
-    return Jugadores.plantillaFormularioPersona.actualiza( persona );
+Jugadores.personaComoFormulario = function (jugador) {
+    return Jugadores.plantillaFormularioPersona.actualiza( jugador );
 }
 
 
@@ -483,18 +487,18 @@ Jugadores.comparaNombre = function (a, b) {
 
 /**
  * Función para mostrar en pantalla los detalles de una persona que se ha recuperado de la BBDD por su id
- * @param {Persona} persona Datos de la persona a mostrar
+ * @param {jugador} jugador Datos del jugador a mostrar
  */
 
-Jugadores.imprimeUnaPersona = function (persona) {
-    // console.log(persona) // Para comprobar lo que hay en vector
-    let msj = Jugadores.personaComoFormulario(persona);
+Jugadores.imprimeUnJugador = function (jugador) {
+    // console.log(jugador) 
+    let msj = Jugadores.personaComoTabla(jugador);
 
     // Borro toda la info de Article y la sustituyo por la que me interesa
     Frontend.Article.actualizar("Mostrar una persona", msj)
 
     // Actualiza el objeto que guarda los datos mostrados
-    Jugadores.almacenaDatos(persona)
+    Jugadores.almacenaDatos(jugador)
 }
 
 /**
@@ -536,10 +540,10 @@ Jugadores.ordenarListadoNombresAlfabeticamente = function(){
 Jugadores.listadoDatos = function(){
     Jugadores.recupera(Jugadores.imprimeListadoDatos);
 }
-//HU 
-Jugadores.mostrarDatosUnJugador = function(){
+
+Jugadores.mostrarDatosUnJugador = function(idJugador){
     Frontend.agregarHistorial("Pulsado botón Mostrar jugador de beisbol ")
-    this.recuperaUnaPersona(idJugador, this.imprimeUnaPersona);
+    this.recuperaUnaPersona(idJugador, this.imprimeUnJugador);
 
 }
 
@@ -548,7 +552,7 @@ Jugadores.mostrarDatosUnJugador = function(){
  * @param {String} idPersona Identificador de la persona a mostrar
  */
 Jugadores.mostrar = function (idPersona) {
-    this.recuperaUnaPersona(idPersona, this.imprimeUnaPersona);
+    this.recuperaUnaPersona(idPersona, this.imprimeUnJugador);
 }
 
 
