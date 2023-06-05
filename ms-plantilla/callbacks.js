@@ -100,6 +100,40 @@ const CB_MODEL_SELECTS = {
             CORS(res).status(500).json({ error: error.description })
         }
     },
+    setJugador: async (req, res) => {
+        try {
+            let data = (Object.values(req.body)[0] === '') ? JSON.parse(Object.keys(req.body)[0]) : req.body
+            await client.query(
+                q.Update(
+                    q.Ref(q.Collection(COLLECTION), req.params.id),
+                    {
+                        data: {
+                            nombre: data.nombre,
+                            apellidos: data.apellidos,
+                            fechaNacimiento: [
+                                {
+                                    dia: data.dia,
+                                    mes: data.mes,
+                                    año: data.año,
+                                }
+                            ],
+                            participacionesMundial: data.participacionesMundial,
+                            partidosMVP: data.partidosMVP,
+                        },
+                    }
+                )
+            )
+                .then((ret) => {
+                    CORS(res)
+                        .status(200)
+                        .header('Content-Type', 'application/json')
+                        .json(ret)
+                })
+
+        } catch (error) {
+            CORS(res).status(500).json({ error: error.description })
+        }
+    },
 
 }
 

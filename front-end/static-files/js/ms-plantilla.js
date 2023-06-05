@@ -38,6 +38,9 @@ Jugadores.descargarRuta = async function (ruta, callBackFn) {
     }
 }
 
+Jugadores.jugadorMostrado = null;
+
+
 // Tags  para sustituir los campos
 Jugadores.plantillaTags = {
     "ID": "### ID ###",
@@ -96,8 +99,6 @@ Jugadores.procesarAcercaDe = function () {
 Jugadores.form = {
     NOMBRE: "form-persona-nombre",
     APELLIDOS: "form-persona-apellidos",
-    EMAIL: "form-persona-email",
-    ANIO: "form-persona-anio",
 }
 
 /// Objeto para almacenar los datos de la persona que se está mostrando
@@ -108,34 +109,39 @@ Jugadores.plantillaFormularioPersona = {}
 
 
 // Formulario para mostrar los datos de un/a jugador/a
+// Cabecera del formulario
 Jugadores.plantillaFormularioPersona.formulario = `
 <form method='post' action=''>
-    <table width="100%" class="listado-personas-SoloNombres">
+    <table width="100%" class="listado-personas">
         <thead>
-            <th width="10%">Id</th>
-            <th width="20%">Nombre</th>
-            <th width="20%">Apellidos</th>
-            <th width="20%">Dia</th>
-            <th width="20%">Mes</th>
-            <th width="20%">Año</th>
-            <th width="20%">Participaciones Mundial</th>
-            <th width="20%">Partidos MVP</th>
+            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">eMail</th>
+            <th width="15%">Año contratación</th><th width="25%">Acciones</th>
         </thead>
         <tbody>
             <tr title="${Jugadores.plantillaTags.ID}">
-                <td><input type="text" class="form-persona-elemento" disabled id="idJugador" value="${Jugadores.plantillaTags.ID}" name="id"/></td>
-                <td>${Jugadores.plantillaTags.NOMBRE}</td>
-                <td>${Jugadores.plantillaTags.APELLIDOS}</td>
-                <td>${Jugadores.plantillaTags.DIA}</td>
-                <td>${Jugadores.plantillaTags.MES}</td>
-                <td>${Jugadores.plantillaTags.AÑO}</td>
-                <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
-                <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
+                <td><input type="text" class="form-persona-elemento" disabled id="form-persona-id"
+                        value="${Jugadores.plantillaTags.ID}" 
+                        name="id_persona"/></td>
+                <td><input type="text" class="form-persona-elemento editable" disabled
+                        id="form-persona-nombre" required value="${Jugadores.plantillaTags.NOMBRE}" 
+                        name="nombre_persona"/></td>
+                <td><input type="text" class="form-persona-elemento editable" disabled
+                        id="form-persona-apellidos" value="${Jugadores.plantillaTags.APELLIDOS}" 
+                        name="apellidos_persona"/></td>
+                <td><input type="email" class="form-persona-elemento editable" disabled
+                        id="form-persona-email" required value="${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}" 
+                        name="email_persona"/></td>
+                <td>
+                    <div><a href="javascript:Jugadores.editar()" class="opcion-secundaria mostrar">Editar</a></div>
+                    <div><a href="javascript:Jugadores.guardar()" class="opcion-terciaria editar ocultar">Guardar</a></div>
+                    <div><a href="javascript:Jugadores.cancelar()" class="opcion-terciaria editar ocultar">Cancelar</a></div>
+                </td>
             </tr>
         </tbody>
     </table>
 </form>
 `;
+
 
 
 /// Plantilla para poner los datos de varias personas dentro de una tabla
@@ -145,11 +151,12 @@ Jugadores.tablaUnSoloJugador = {}
 
 
 // Cabecera de la tabla
-Jugadores.tablaJugadoresNombres.cabecera = `<table width="100%" class="listado-personas">
-                    <thead>
-                        <th width="20%">Nombre</th>
-                    </thead>
-                    <tbody>
+Jugadores.tablaJugadoresNombres.cabecera = 
+`<table width="100%" class="listado-personas">
+            <thead>
+                <th width="20%">Nombre</th>
+            </thead>
+            <tbody>
     `;
 
     // Cabecera de la tabla
@@ -212,7 +219,31 @@ Jugadores.cabeceraTable = function () {
     `;
 }
 
+// Elemento TR que muestra los nombres de una persona
+Jugadores.tablaJugadoresNombres.cuerpo = `
+    <tr title="${Jugadores.plantillaTags.NOMBRE}">
+        <td>${Jugadores.plantillaTags.NOMBRE}</td>
+    </tr>
+    `;
 
+    // Elemento TR que muestra los datos de una persona
+Jugadores.tablaJugadoresDatos.cuerpo = `
+<tr title="${Jugadores.plantillaTags.ID}">
+    <td>${Jugadores.plantillaTags.ID}</td>
+    <td>${Jugadores.plantillaTags.NOMBRE}</td>
+    <td>${Jugadores.plantillaTags.APELLIDOS}</td>
+    <td>${Jugadores.plantillaTags.DIA}</td>
+    <td>${Jugadores.plantillaTags.MES}</td>
+    <td>${Jugadores.plantillaTags.AÑO}</td>
+    <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
+    <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
+    <td>
+            <div><a href="javascript:Jugadores.mostrar('${Jugadores.plantillaTags.ID}')" class="opcion-secundaria mostrar">Mostrar Datos</a></div>
+            <td><a href="javascript:Jugadores.modificar()" class="opcion-principal mostrar">Modificar</a></td>
+
+    </td>
+</tr>
+`;
 
 /**
  * Pie de la tabla en la que se muestran las personas
@@ -344,29 +375,7 @@ Jugadores.recuperaUnaPersona = async function (idPersona, callBackFn) {
         console.error(error)
     }
 }
-// Elemento TR que muestra los nombres de una persona
-Jugadores.tablaJugadoresNombres.cuerpo = `
-    <tr title="${Jugadores.plantillaTags.NOMBRE}">
-        <td>${Jugadores.plantillaTags.NOMBRE}</td>
-    </tr>
-    `;
 
-    // Elemento TR que muestra los datos de una persona
-Jugadores.tablaJugadoresDatos.cuerpo = `
-<tr title="${Jugadores.plantillaTags.ID}">
-    <td>${Jugadores.plantillaTags.ID}</td>
-    <td>${Jugadores.plantillaTags.NOMBRE}</td>
-    <td>${Jugadores.plantillaTags.APELLIDOS}</td>
-    <td>${Jugadores.plantillaTags.DIA}</td>
-    <td>${Jugadores.plantillaTags.MES}</td>
-    <td>${Jugadores.plantillaTags.AÑO}</td>
-    <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
-    <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
-    <td>
-            <div><a href="javascript:Jugadores.mostrar('${Jugadores.plantillaTags.ID}')" class="opcion-secundaria mostrar">Mostrar Datos</a></div>
-    </td>
-</tr>
-`;
 
 
 
@@ -380,6 +389,57 @@ Jugadores.personaComoTabla = function (persona) {
         + Jugadores.tablaUnSoloJugador.actualiza(persona)
         + Jugadores.tablaUnSoloJugador.pie;
 }
+
+//HU 12
+
+Jugadores.modificar = function () {
+    let msj = Jugadores.jugadoresModifica(this.jugadorMostrado);
+    Frontend.Article.actualizar("Modificar un jugador", msj)
+}
+
+Jugadores.jugadoresModifica = function (persona) {
+    return Jugadores.tablaUnSoloJugador.cabecera
+        + Jugadores.tablaUnSoloJugador.actualiza(persona)
+        + Jugadores.tablaUnSoloJugador.pie;
+}
+
+/*Convertimos la función a asíncrona para que se muestren los datos actualizados*/
+Jugadores.guardarModificacion = async function (id) {
+    await this.modificarJugador(id)
+    this.mostrar(id)
+}
+
+Jugadores.modificarJugador = async function (id) {
+    try {
+        let url = Frontend.API_GATEWAY + "/plantilla/setJugador/" + id
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'no-cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'omit', // include, *same-origin, omit
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify({
+                "nombre": document.getElementById("modifica-nombre").value,
+                "apellidos": this.jugadorMostrado.APELLIDOS,
+                "dia": this.jugadorMostrado.DIA,
+                "mes": this.jugadorMostrado.MES,
+                "año": this.jugadorMostrado.AÑO,
+                "participacionesMundial": this.PARTICIPACIONESMUNDIAL.CIUDAD,
+                "partidosMVP": this.jugadorMostrado.PARTIDOSMVP,
+            }), // body data type must match "Content-Type" header
+        })
+        alert("Tu deportista se ha actualiza correctamente")
+    } catch (error) {
+        alert("Error: No se han podido acceder al API Gateway " + error)
+    }
+
+}
+
+//----------------------------------------
 
 
 /**
@@ -492,7 +552,8 @@ Jugadores.comparaNombre = function (a, b) {
 
 Jugadores.imprimeUnJugador = function (jugador) {
     // console.log(jugador) 
-    let msj = Jugadores.personaComoTabla(jugador);
+    let msj = "";
+    msj = Jugadores.personaComoFormulario(jugador);
 
     // Borro toda la info de Article y la sustituyo por la que me interesa
     Frontend.Article.actualizar("Mostrar una persona", msj)
