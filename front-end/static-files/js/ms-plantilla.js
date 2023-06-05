@@ -112,7 +112,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
 <form method='post' action=''>
     <table width="100%" class="listado-personas">
         <thead>
-            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">eMail</th>
+            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">FechaNacimiento</th>
             <th width="15%">Año contratación</th><th width="25%">Acciones</th>
         </thead>
         <tbody>
@@ -126,18 +126,13 @@ Jugadores.plantillaFormularioPersona.formulario = `
                 <td><input type="text" class="form-persona-elemento editable" disabled
                         id="form-persona-apellidos" value="${Jugadores.plantillaTags.APELLIDOS}" 
                         name="apellidos_persona"/></td>
-                <td><input type="email" class="form-persona-elemento editable" disabled
-                        id="form-persona-email" required value="${Jugadores.plantillaTags.FECHANACIMIENTO}" 
+                <td><input type="text" class="form-persona-elemento editable" disabled
+                        id="form-persona-fechaNacimiento" required value="${Jugadores.plantillaTags.FECHANACIMIENTO}" 
                         name="fecha_nacimiento"/></td>
                 <td><input type="number" class="form-persona-elemento editable" disabled
                         id="form-persona-anio" min="1950" max="2030" size="8" required
                         value="${Jugadores.plantillaTags["AÑO ENTRADA"]}" 
                         name="año_entrada_persona"/></td>
-                <td>
-                    <div><a href="javascript:Personas.editar()" class="opcion-secundaria mostrar">Editar</a></div>
-                    <div><a href="javascript:Personas.guardar()" class="opcion-terciaria editar ocultar">Guardar</a></div>
-                    <div><a href="javascript:Personas.cancelar()" class="opcion-terciaria editar ocultar">Cancelar</a></div>
-                </td>
             </tr>
         </tbody>
     </table>
@@ -148,6 +143,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
 /// Plantilla para poner los datos de varias personas dentro de una tabla
 Jugadores.tablaJugadoresNombres = {}
 Jugadores.tablaJugadoresDatos = {}
+Jugadores.tablaUnSoloJugador = {}
 
 
 // Cabecera de la tabla
@@ -174,6 +170,23 @@ Jugadores.tablaJugadoresDatos.cabecera = `<table width="100%" class="listado-per
 <tbody>
 `;
 
+    // Cabecera de la tabla
+    Jugadores.tablaUnSoloJugador.cabecera =
+    `<table width="100%" class="listado-personas">
+    <thead>
+        <th width="10%">Id</th>
+        <th width="20%">Nombre</th>
+        <th width="20%">Apellidos</th>
+        <th width="10%">Dia</th>
+        <th width="10%">Mes</th>
+        <th width="10%">Año</th>
+        <th width="15%">Participaciones Mundial</th>
+        <th width="15%">PartidosMVP</th>
+    
+    </thead>
+    <tbody>
+    `;
+
 /**
  * Crea la cabecera para mostrar la info como tabla
  * @returns Cabecera de la tabla
@@ -187,22 +200,19 @@ Jugadores.cabeceraTable = function () {
     `;
 }
 
-/**
- * Muestra la información de cada proyecto en un elemento TR con sus correspondientes TD
- * @param {proyecto} p Datos del proyecto a mostrar
- * @returns Cadena conteniendo todo el elemento TR que muestra el proyecto.
- */
-Jugadores.cuerpoTr = function (p) {
-    const d = p.data
-    const ini = d.inicio;
-    const fin = d.final;
-    const presupuesto = Frontend.euros(d.presupuesto);
-
-    return `<tr title="${p.ref['@ref'].id}">
-    <td><em>${d.nombre}</em></td>
+Jugadores.tablaUnSoloJugador.cuerpo = `
+    <tr title="${Jugadores.plantillaTags.ID}">
+        <td>${Jugadores.plantillaTags.ID}</td>
+        <td>${Jugadores.plantillaTags.NOMBRE}</td>
+        <td>${Jugadores.plantillaTags.APELLIDOS}</td>
+        <td>${Jugadores.plantillaTags.DIA}</td>
+        <td>${Jugadores.plantillaTags.MES}</td>
+        <td>${Jugadores.plantillaTags.AÑO}</td>
+        <td>${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}</td>
+        <td>${Jugadores.plantillaTags.PARTIDOSMVP}</td>
+        
     </tr>
     `;
-}
 
 /**
  * Pie de la tabla en la que se muestran las personas
@@ -219,6 +229,11 @@ Jugadores.pieTable = function () {
 Jugadores.tablaJugadoresNombres.pie = `        </tbody>
              </table>
              `;
+
+             // Pie de la tabla
+Jugadores.tablaUnSoloJugador.pie = `        </tbody>
+</table>
+`;
 
 
 /**
@@ -520,6 +535,12 @@ Jugadores.ordenarListadoNombresAlfabeticamente = function(){
 }
 Jugadores.listadoDatos = function(){
     Jugadores.recupera(Jugadores.imprimeListadoDatos);
+}
+//HU 
+Jugadores.mostrarDatosUnJugador = function(){
+    Frontend.agregarHistorial("Pulsado botón Mostrar jugador de beisbol ")
+    this.recuperaUnaPersona(idJugador, this.imprimeUnaPersona);
+
 }
 
 /**
