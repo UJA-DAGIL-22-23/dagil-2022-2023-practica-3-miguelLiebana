@@ -1,6 +1,6 @@
 */node_modules/*
 */node_modules/.*/*
-api-gateway/node_modules/.bin/*
+api-gateway/node_modules/.bin/*gi
 api-gateway/node_modules/.package-lock.json
 api-gateway/node_modules/.bin/jasmine
 api-gateway/node_modules/.bin/mime
