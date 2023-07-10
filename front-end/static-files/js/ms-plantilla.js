@@ -114,7 +114,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
 <form method='post' action=''>
     <table width="100%" class="listado-personas">
         <thead>
-            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">Fecha de Nacimiento</th><th width="10%">Participaciones Mundial</th><th width="10%">Partidos MVP</th>
+            <th width="10%">Id</th><th width="10%">Nombre</th><th width="10%">Apellidos</th><th width="10%">Fecha de Nacimiento</th><th width="10%">Participaciones Mundial</th><th width="10%">Partidos MVP</th>
         </thead>
         <tbody>
             <tr title="${Jugadores.plantillaTags.ID}">
@@ -128,7 +128,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
                         id="form-persona-apellidos" value="${Jugadores.plantillaTags.APELLIDOS}" 
                         name="apellidos_persona"/></td>
                 <td><input type="email" class="form-persona-elemento editable" disabled
-                        id="form-persona-email" required value="${Jugadores.plantillaTags.FECHANACIMIENTO}" 
+                        id="form-persona-email" required value="${Jugadores.plantillaTags.DIA}-${Jugadores.plantillaTags.MES}-${Jugadores.plantillaTags.AÑO}" 
                         name="email_persona"/></td>
                         <td><input type="email" class="form-persona-elemento editable" disabled
                         id="form-persona-email" required value="${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}" 
@@ -148,6 +148,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
 Jugadores.tablaJugadoresNombres = {}
 Jugadores.tablaJugadoresDatos = {}
 Jugadores.tablaUnSoloJugador = {}
+Jugadores.vectorJugadores = null
 
 
 // Cabecera de la tabla
@@ -155,6 +156,12 @@ Jugadores.tablaJugadoresNombres.cabecera =
 `<table width="100%" class="listado-personas">
             <thead>
                 <th width="20%">Nombre</th>
+                <input type="text" class="form-persona-elemento editable" 
+                            id="filter-nombre" required 
+                            name="nombre" value=""/> 
+                <a href="javascript:Jugadores.filtraNombres()" class="opcion-principal mostrar">
+                            Filtrar
+                </a>
             </thead>
             <tbody>
     `;
@@ -170,7 +177,12 @@ Jugadores.tablaJugadoresDatos.cabecera = `<table width="100%" class="listado-per
     <th width="10%">Año</th>
     <th width="15%">Participaciones Mundial</th>
     <th width="15%">PartidosMVP</th>
-
+    <input type="text" class="form-persona-elemento editable" 
+                            id="filter-nombre" required 
+                            name="nombre" value=""/> 
+    <a href="javascript:Jugadores.filtraNombres()" class="opcion-principal mostrar">
+        Buscar
+    </a>
 </thead>
 <tbody>
 `;
@@ -606,6 +618,41 @@ Jugadores.mostrarDatosUnJugador = function(idJugador){
     Frontend.agregarHistorial("Pulsado botón Mostrar jugador de beisbol ")
     this.recuperaUnaPersona(idJugador, this.imprimeUnJugador);
 
+}
+
+//HU-08 Funciones para filtrar los datos de un jugador por nombre
+Jugadores.filtraNombres = function (buscarNombre) {
+    this.recuperaPorNombre(buscarNombre, this.imprime);
+}
+Jugadores.cuerpoFiltro = function (p) { 
+    const d = p.data
+    return `<tr><td>${d.nombre}</td><td>${d.apellidos}</td><td>${d.fechaNacimiento}</td><td>${d.participacionesMundial}</td><td>${d.partidosMVP}</td></tr>`;
+}
+Jugadores.imprime = function (vector) {
+    let msj = "";
+    msj += Jugadores.tablaUnSoloJugador.cabecera;
+    vector.forEach(e => msj += Jugadores.cuerpoFiltro(e))
+    msj += Jugadores.tablaUnSoloJugador.pie;
+
+    Frontend.Article.actualizar("Listado de jugadores/as por nombre", msj)
+}
+
+Jugadores.recuperaPorNombre = async function (buscarNombre, callBackFn) { //No se le puede hacer TDD porque es una función asíncrona
+    let response = null
+    try {
+        const url = Frontend.API_GATEWAY + "/plantilla/getTodas"
+        response = await fetch(url)
+
+    } catch (error) {
+        console.error(error)
+    }
+
+    let vectorPersonas = null
+    if (response) {
+        vectorPersonas = await response.json()
+        const filtro = vectorPersonas.data.filter(persona => persona.data.nombre === buscarNombre);
+        callBackFn(filtro)
+    }
 }
 
 /**
