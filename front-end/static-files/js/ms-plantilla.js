@@ -114,8 +114,7 @@ Jugadores.plantillaFormularioPersona.formulario = `
 <form method='post' action=''>
     <table width="100%" class="listado-personas">
         <thead>
-            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">eMail</th>
-            <th width="15%">Año contratación</th><th width="25%">Acciones</th>
+            <th width="10%">Id</th><th width="20%">Nombre</th><th width="20%">Apellidos</th><th width="10%">Fecha de Nacimiento</th><th width="10%">Participaciones Mundial</th><th width="10%">Partidos MVP</th>
         </thead>
         <tbody>
             <tr title="${Jugadores.plantillaTags.ID}">
@@ -129,13 +128,14 @@ Jugadores.plantillaFormularioPersona.formulario = `
                         id="form-persona-apellidos" value="${Jugadores.plantillaTags.APELLIDOS}" 
                         name="apellidos_persona"/></td>
                 <td><input type="email" class="form-persona-elemento editable" disabled
+                        id="form-persona-email" required value="${Jugadores.plantillaTags.FECHANACIMIENTO}" 
+                        name="email_persona"/></td>
+                        <td><input type="email" class="form-persona-elemento editable" disabled
                         id="form-persona-email" required value="${Jugadores.plantillaTags.PARTICIPACIONESMUNDIAL}" 
                         name="email_persona"/></td>
-                <td>
-                    <div><a href="javascript:Jugadores.editar()" class="opcion-secundaria mostrar">Editar</a></div>
-                    <div><a href="javascript:Jugadores.guardar()" class="opcion-terciaria editar ocultar">Guardar</a></div>
-                    <div><a href="javascript:Jugadores.cancelar()" class="opcion-terciaria editar ocultar">Cancelar</a></div>
-                </td>
+                        <td><input type="email" class="form-persona-elemento editable" disabled
+                        id="form-persona-email" required value="${Jugadores.plantillaTags.PARTIDOSMVP}" 
+                        name="email_persona"/></td>
             </tr>
         </tbody>
     </table>
