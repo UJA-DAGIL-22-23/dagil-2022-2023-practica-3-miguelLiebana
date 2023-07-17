@@ -33,8 +33,6 @@ A continuación se mostrarán como quedan las tareas en Trello después de su fi
 ![HU-1](Imagenes/TRELLO/HU-3.png))
 * HU-4
 ![HU-1](Imagenes/TRELLO/HU-4.png))
-* HU-5
-![HU-1](Imagenes/TRELLO/HU-5.png))
 * HU-6
 ![HU-1](Imagenes/TRELLO/HU-6.png))
 
