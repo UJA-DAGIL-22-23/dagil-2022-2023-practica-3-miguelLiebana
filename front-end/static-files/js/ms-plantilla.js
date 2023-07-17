@@ -156,12 +156,8 @@ Jugadores.tablaJugadoresNombres.cabecera =
 `<table width="100%" class="listado-personas">
             <thead>
                 <th width="20%">Nombre</th>
-                <input type="text" class="form-persona-elemento editable" 
-                            id="filter-nombre" required 
-                            name="nombre" value=""/> 
-                <a href="javascript:Jugadores.filtraNombres()" class="opcion-principal mostrar">
-                            Filtrar
-                </a>
+                <th><a href="javascript:Jugadores.filtrarNombres()" class="opcion-principal mostrar"
+                    title="Buscar un/a jugador/a de la base de datos por el nombre">Buscar Por Nombre</a></th>
             </thead>
             <tbody>
     `;
@@ -177,12 +173,8 @@ Jugadores.tablaJugadoresDatos.cabecera = `<table width="100%" class="listado-per
     <th width="10%">Año</th>
     <th width="15%">Participaciones Mundial</th>
     <th width="15%">PartidosMVP</th>
-    <input type="text" class="form-persona-elemento editable" 
-                            id="filter-nombre" required 
-                            name="nombre" value=""/> 
-    <a href="javascript:Jugadores.filtraNombres()" class="opcion-principal mostrar">
-        Buscar
-    </a>
+    <a href="javascript:Jugadores.filtrarNombres()" class="opcion-principal mostrar"
+    title="Buscar un/a jugador/a de la base de datos por el nombre">Buscar Por Nombre</a>
 </thead>
 <tbody>
 `;
